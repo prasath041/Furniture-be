@@ -6,6 +6,22 @@ const dotenv = require('dotenv');
 // Load environment variables
 dotenv.config();
 
+// Import routes statically (required for Vercel bundling)
+const authRoutes = require('./routes/authRoutes');
+const furnitureRoutes = require('./routes/furnitureRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
+const bookingRoutes = require('./routes/bookingRoutes');
+const userRoutes = require('./routes/userRoutes');
+const woodRoutes = require('./routes/woodRoutes');
+const doorRoutes = require('./routes/doorRoutes');
+const windowRoutes = require('./routes/windowRoutes');
+const lockerRoutes = require('./routes/lockerRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
+const orderRoutes = require('./routes/orderRoutes');
+const analyticsRoutes = require('./routes/analyticsRoutes');
+const deliveryRoutes = require('./routes/deliveryRoutes');
+const shopkeeperRoutes = require('./routes/shopkeeperRoutes');
+
 const app = express();
 
 // Middleware
@@ -67,35 +83,21 @@ app.use(async (req, res, next) => {
   }
 });
 
-// Lazy load routes to catch import errors
-const loadRoute = (routePath) => {
-  try {
-    return require(routePath);
-  } catch (err) {
-    console.error(`Failed to load route ${routePath}:`, err.message);
-    const router = express.Router();
-    router.all('*', (req, res) => {
-      res.status(500).json({ success: false, message: `Route module error: ${err.message}` });
-    });
-    return router;
-  }
-};
-
 // Routes
-app.use('/api/auth', loadRoute('./routes/authRoutes'));
-app.use('/api/furniture', loadRoute('./routes/furnitureRoutes'));
-app.use('/api/categories', loadRoute('./routes/categoryRoutes'));
-app.use('/api/bookings', loadRoute('./routes/bookingRoutes'));
-app.use('/api/users', loadRoute('./routes/userRoutes'));
-app.use('/api/woods', loadRoute('./routes/woodRoutes'));
-app.use('/api/doors', loadRoute('./routes/doorRoutes'));
-app.use('/api/windows', loadRoute('./routes/windowRoutes'));
-app.use('/api/lockers', loadRoute('./routes/lockerRoutes'));
-app.use('/api/upload', loadRoute('./routes/uploadRoutes'));
-app.use('/api/orders', loadRoute('./routes/orderRoutes'));
-app.use('/api/analytics', loadRoute('./routes/analyticsRoutes'));
-app.use('/api/delivery', loadRoute('./routes/deliveryRoutes'));
-app.use('/api/shopkeeper', loadRoute('./routes/shopkeeperRoutes'));
+app.use('/api/auth', authRoutes);
+app.use('/api/furniture', furnitureRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/bookings', bookingRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/woods', woodRoutes);
+app.use('/api/doors', doorRoutes);
+app.use('/api/windows', windowRoutes);
+app.use('/api/lockers', lockerRoutes);
+app.use('/api/upload', uploadRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/analytics', analyticsRoutes);
+app.use('/api/delivery', deliveryRoutes);
+app.use('/api/shopkeeper', shopkeeperRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
